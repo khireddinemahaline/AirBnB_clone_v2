@@ -19,9 +19,12 @@ class FileStorage:
     __file_path = 'file.json'
     __objects = {}
 
-    def all(self):
+    def all(self, cls=None):
         """return the dictionary objects"""
-        return self.__objects
+        if cls is None:
+            return self.__objects
+        else:
+            return [obj for obj in self.__objects.values() if isinstance(obj, cls)]
 
     def new(self, obj):
         """set a key to obj"""
@@ -56,3 +59,11 @@ class FileStorage:
                     if name in classes:
                         obj = classes[name](**v)
                         self.__class__.__objects[k] = obj
+
+    def delete(self, obj=None):
+        if obj:
+            key = "{}.{}".format(type(obj).__name__, obj.id)
+            if key in self.__objects:
+                del (obj)
+        else:
+            pass

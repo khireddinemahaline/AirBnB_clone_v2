@@ -4,6 +4,7 @@
 
 import json
 import os
+import shlex
 import models
 from models.base_model import BaseModel
 from models.user import User
@@ -20,11 +21,21 @@ class FileStorage:
     __objects = {}
 
     def all(self, cls=None):
-        """return the dictionary objects"""
-        if cls is None:
-            return self.__objects
+        """returns a dictionary
+        Return:
+            returns a dictionary of __object
+        """
+        dic = {}
+        if cls:
+            dictionary = self.__objects
+            for key in dictionary:
+                partition = key.replace('.', ' ')
+                partition = shlex.split(partition)
+                if (partition[0] == cls.__name__):
+                    dic[key] = self.__objects[key]
+            return (dic)
         else:
-            return [obj for obj in self.__objects.values() if isinstance(obj, cls)]
+            return self.__objects
 
     def new(self, obj):
         """set a key to obj"""
@@ -64,6 +75,6 @@ class FileStorage:
         if obj:
             key = "{}.{}".format(type(obj).__name__, obj.id)
             if key in self.__objects:
-                del (obj)
+                del self.__objects[key]
         else:
             pass

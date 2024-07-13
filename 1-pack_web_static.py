@@ -3,6 +3,7 @@
 from fabric.api import local, task
 from datetime import datetime
 
+
 @task
 def do_pack():
     """generate .tgz archive file with name 'versions' """
@@ -12,5 +13,5 @@ def do_pack():
         filename = "versions/web_static_{}.tgz".format(timenow)
         local("tar -cvzf {} web_static/".format(filename))
         return filename
-    except:
+    except Exception as e:
         return None

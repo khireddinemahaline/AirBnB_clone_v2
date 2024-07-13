@@ -1,4 +1,4 @@
-#!usr/bin/env python3
+#!/usr/bin/python3
 """
 A function for deploying web_static content to web servers.
 """
@@ -12,7 +12,7 @@ env.user = 'ubuntu'
 
 
 def do_deploy(archive_path):
-    """d"""
+    """deploy"""
     if not os.path.exists(archive_path):
         return False
     try:

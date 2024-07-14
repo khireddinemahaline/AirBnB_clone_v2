@@ -44,3 +44,12 @@ def do_deploy(archive_path):
     except Exception as e:
         print('Error: {}'.format(e))
         return False
+
+def deploy():
+    """ DEPLOYS """
+    try:
+        archive_path = do_pack()
+    except:
+        return False
+
+    return do_deploy(archive_path)

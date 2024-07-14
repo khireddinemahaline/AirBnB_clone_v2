@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 """Fabric script generates .tgz archive of all in web_static"""
-from fabric.api import local
+from fabric.api import local, task, run, put, env
 from time import strtime
 
 env.hosts = ['54.89.58.11', '34.232.69.60']
-env.user = 'ubuntu''
+env.user = 'ubuntu'
 
 
+@task
 def do_pack():
     """generate .tgz archive in der with name 'versions' """
     timenow = strtime("%Y%M%W%D%H%M%S")
@@ -15,7 +16,7 @@ def do_pack():
         filename = "versions/web_static_{}.tgz".format(timenow)
         local("tar -cvzf {} web_static/".format(filename))
         return filename
-    except:
+    Exception as e:
         return None
 
 def do_deploy(archive_path):

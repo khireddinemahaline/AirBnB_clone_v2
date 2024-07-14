@@ -7,6 +7,15 @@ env.hosts = ['54.89.58.11', '34.232.69.60']
 env.user = 'ubuntu''
 
 
+def deploy():
+    """ DEPLOYS """
+    try:
+        archive_path = do_pack()
+    except:
+        return False
+
+    return do_deploy(archive_path)
+
 def do_pack():
     """generate .tgz archive in der with name 'versions' """
     timenow = datetime.now().strftime('%Y%m%d%H%M%S')
@@ -43,12 +52,3 @@ def do_deploy(archive_path):
     except Exception as e:
         print('Error: {}'.format(e))
         return False
-
-def deploy():
-    """ DEPLOYS """
-    try:
-        archive_path = do_pack()
-    except:
-        return False
-
-    return do_deploy(archive_path)

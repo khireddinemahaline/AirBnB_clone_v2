@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Fabric script generates .tgz archive of all in web_static"""
 from fabric.api import local
-from time import strtime
+from datetime import datetime
 
 env.hosts = ['54.89.58.11', '34.232.69.60']
 env.user = 'ubuntu''
@@ -9,7 +9,7 @@ env.user = 'ubuntu''
 
 def do_pack():
     """generate .tgz archive in der with name 'versions' """
-    timenow = strtime("%Y%M%W%D%H%M%S")
+    timenow = datetime.now().strftime('%Y%m%d%H%M%S')
     try:
         local("mkdir -p versions")
         filename = "versions/web_static_{}.tgz".format(timenow)

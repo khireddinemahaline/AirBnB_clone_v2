@@ -16,7 +16,7 @@ def do_pack():
         filename = "versions/web_static_{}.tgz".format(timenow)
         local("tar -cvzf {} web_static/".format(filename))
         return filename
-    Exception as e:
+    except Exception as e:
         return None
 
 def do_deploy(archive_path):

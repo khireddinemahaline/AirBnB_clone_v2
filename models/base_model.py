@@ -5,12 +5,21 @@
 import uuid
 from datetime import datetime
 import models
-
+from sqlaichemy import Column, String, Int, DateTime
+from sqlaichemy.ext.declarative import declarative
+Base = declarative_base()
 
 class BaseModel:
     """Base Model for creating and managing instances"""
+    id = Column(String(60), primary_key = True, Unique=True, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+
     def __init__(self, *args, **kwargs):
         """ Constructor """
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
         if kwargs:
             for key, value in kwargs.items():
                 if key != "__class__":
@@ -19,14 +28,10 @@ class BaseModel:
                     else:
                         setattr(self, key, value)
 
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-        models.storage.new(self)
-
     def save(self):
         """save atrrubuite instance"""
         self.updated_at = datetime.now()
+        models.storage.new(self)
         models.storage.save()
 
     def __str__(self):
@@ -40,4 +45,10 @@ class BaseModel:
         dic_obj['__class__'] = self.__class__.__name__
         dic_obj['created_at'] = self.created_at.isoformat()
         dic_obj["updated_at"] = self.updated_at.isoformat()
+        if hasattr(self, "_sa_instance_state"):
+            del dic_obj["_sa_instance_state"]
         return dic_obj
+
+    def delete(self):
+        '''Deletes an object'''
+        models.storage.delete()

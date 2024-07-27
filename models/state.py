@@ -2,9 +2,11 @@
 """State Class"""
 
 
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
+from sqlaichemy import Column, String
 
 
-class State(BaseModel):
+class State(BaseModel, Base):
     """State Class"""
-    name: str = ''
+    __tablename__ = 'states'
+    name = Column(String(128), nullable=False)

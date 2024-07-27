@@ -7,6 +7,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.state import State
 from models.city import City
+from models.user import User
 
 
 class DBStorage:

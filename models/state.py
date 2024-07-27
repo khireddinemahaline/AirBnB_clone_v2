@@ -3,7 +3,7 @@
 
 
 from models.base_model import BaseModel, Base
-from sqlaichemy import Column, String
+from sqlalchemy import Column, String
 
 
 class State(BaseModel, Base):

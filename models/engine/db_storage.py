@@ -2,9 +2,9 @@
 """data base storage file"""
 
 from os import getenv
-from sqlaichemy import create_engine, MetaData
+from sqlalchemy import create_engine, MetaData
 from models.base_model import BaseModel
-from sqlaichemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker
 from models.state import State
 from models.city import City
 

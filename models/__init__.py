@@ -2,9 +2,10 @@
 """__init__"""
 
 
-from os import getenv
+import os
 
-hbnb_type_storage = getenv("HBNB_TYPE_STORAGE")
+
+hbnb_type_storage = os.getenv("HBNB_TYPE_STORAGE")
 
 if hbnb_type_storage == 'db':
     from models.engine.db_storage import DBStorage

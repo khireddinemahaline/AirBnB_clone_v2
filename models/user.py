@@ -2,22 +2,22 @@
 """User Class"""
 
 from os import getenv
+from sqlalchemy.ext.declarative import declarative_base
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
-from models.places import Places
-from sqlalchemy.orm import Relationship
-
+from sqlalchemy.orm import relationship
+from models.place import Place
 
 
 class User(BaseModel, Base):
     """User Class"""
+    __tablename__ = 'users'
     if getenv("HBNB_TYPE_STORAGE") == 'db':
-        __tablename__ = 'users'
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)
         first_name = Column(String(128), nullable=False)
         last_name = Column(String(128), nullable=False)
-        places = Relationship("Place", backref='users', cascade="all, delete, delete-orphan")
+        places = relationship("Place", backref="user", cascade="all, delete, delete-orphan")
     else:
         email: str = ''
         password: str = ''

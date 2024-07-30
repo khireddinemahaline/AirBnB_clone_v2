@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 """Place Class"""
 
-from os import env
+from os import getenv
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
 
-
 class Place(BaseModel, Base):
     """Place Class"""
+    __tablename__ = 'places'
     if getenv("HBNB_TYPE_STORAGE") == 'db':
-        __tablename__ = 'places'
         city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
         user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
         name = Column(String(128), nullable=False)
@@ -19,8 +18,7 @@ class Place(BaseModel, Base):
         max_guest = Column(Integer, default=0, nullable=False)
         price_by_night = Column(Integer, default=0, nullable=False)
         latitude = Column(Float, nullable=True)
-        longitude = Column(Float, nullable=True)
-        amenity_ids = 
+        longitude = Column(Float, nullable=True) 
 
     else:
         city_id: str = ''

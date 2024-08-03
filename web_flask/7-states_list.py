@@ -14,7 +14,7 @@ app = Flask(__name__)
 def handel_teardown():
     storage.close()
 
-@app.route('/states_list')
+@app.route('/states_list', strict_slashes=False)
 def handel():
     states = storage.all(State).values()
     return render_template('7-states_list.html', states)

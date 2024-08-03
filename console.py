@@ -3,12 +3,6 @@
 ----to start the file : ./console.py"""
 from models import storage
 from models.base_model import BaseModel
-from models.user import User
-from models.amenity import Amenity
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
 import cmd
 import models
 import shlex
@@ -92,6 +86,7 @@ class HBNBCommand(cmd.Cmd):
         return
 
     def do_all(self, args):
+        """ Shows all objects, or all objects of a class"""
         """show all instance"""
         print_list = []
 

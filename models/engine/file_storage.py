@@ -51,3 +51,18 @@ class FileStorage:
                 value = eval(value["__class__"])(**value)
                 self.__objects[key] = value
     
+    def delete(self, obj=None):
+        '''
+        Deletes an obj
+        '''
+        if obj is not None:
+            key = str(obj.__class__.__name__) + "." + str(obj.id)
+            FileStorage.__objects.pop(key, None)
+            self.save()
+
+    def close(self):
+        '''
+        Deserialize JSON file to objects
+        '''
+        self.reload()
+    

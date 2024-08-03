@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 from models.engine.db_storage import DBStorage
 from os import getenv
@@ -10,4 +9,4 @@ else:
     storage = FileStorage()
 storage.reload()
 
-classes = ["BaseModel", "User", "Place", "State", "City", "Review", "Amenity"]
+classes = ["BaseModel","State", "User", "City", "Place", "Review", "Amenity"]

@@ -1,16 +1,12 @@
 #!/usr/bin/python3
-""" holds class State"""
-import models
-from models.base_model import BaseModel, Base
-from models.city import City
-from sqlalchemy import Column, String, ForeignKey
-from sqlalchemy.orm import relationship
-from os import getenv
+"""This is the state class"""
+from models.base_model import BaseModel
+import shlex
 
-class State(BaseModel, Base):
-    """Representation of state """
-    if getenv("HBNB_TYPE_STORAGE") == 'db':
-        __tablename__ = 'states'
-        name = Column(String(128), nullable=False)
-    else:
-        name = ""
+
+class State(BaseModel):
+    """This is the class for State
+    Attributes:
+        name: input name
+    """
+    name: str = ''

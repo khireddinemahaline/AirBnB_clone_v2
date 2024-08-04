@@ -9,7 +9,7 @@ from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
-
+from models.amenity import Amenity
 
 
 class FileStorage:
@@ -43,13 +43,16 @@ class FileStorage:
             my_dict[key] = value.to_dict()
         with open(self.__file_path, 'w', encoding="UTF-8") as f:
             json.dump(my_dict, f)
+
     def reload(self):
-        """
-        """
-        with open(self.__file_path, 'r',encoding="UTF-8") as f:
-            for key, value in (json.load(f).items()):
-                value = eval(value["__class__"])(**value)
-                self.__objects[key] = value
+        """deserializes the JSON file to __objects"""
+        try:
+            with open(self.__file_path, 'r') as f:
+                jo = json.load(f)
+            for key in jo:
+                self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
+        except:
+            pass
     
     def delete(self, obj=None):
         '''

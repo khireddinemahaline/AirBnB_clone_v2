@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """Place Class"""
-
-
+import models
 from models.base_model import BaseModel, Base
 from os import getenv
 from sqlalchemy import Column, String, Float, Integer, ForeignKey, Table
@@ -48,6 +47,7 @@ class Place(BaseModel, Base):
         @property
         def reviews():
             """list reviews"""
+            from models.review import Review
             list_reviews = []
             for review in models.storage.all(Review).values():
                 if review.place_id == self.id:
@@ -60,11 +60,10 @@ class Place(BaseModel, Base):
                 Return list: amenity inst's if Amenity.place_id=curr place.id
                 FileStorage many to many relationship between Place and Amenity
             '''
-            list_amenities = []
-            for amenity in models.storage.all(Amenity).values():
-                if amenity.place_id == self.id:
-                    amenity_list.append(amenity)
-            return list_amenities
+            from models.amenity import Amenity
+            all_amenity = list(models.storage.all(Amenity).values())
+            list_amenities = [a for a in all_amenity if a.place_id ==self.id]
+            return alist_amenities
 
         @amenities.setter
         def amenities(self, amenity=None):

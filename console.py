@@ -102,7 +102,9 @@ class HBNBCommand(cmd.Cmd):
                 return
             for k, v in storage.all(args).items():
                 if k.split('.')[0] == args:
-                    print_list.append(str(v))
+                    if k != "_sa_instance_state":
+                        print_list.append(str(v))
+
         else:
             for k, v in storage.all(args).items():
                 print_list.append(str(v))

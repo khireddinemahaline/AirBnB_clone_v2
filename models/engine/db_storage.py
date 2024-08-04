@@ -42,22 +42,12 @@ class DBStorage:
 
     def all(self, cls=None):
         db_dict = {}
-
         if cls != "":
-            objs = self.__session.query(classes[cls]).all()
-            for obj in objs:
+            for obj in  self.__session.query(classes[cls]):
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
+                if obj.__class__.__name__ in models.classes:
+                    del obj._sa_instance_state
                 db_dict[key] = obj
-            return db_dict
-        else:
-            for k, v in classes.items():
-                if k != "BaseModel":
-                    objs = self.__session.query(v).all()
-                    if len(objs) > 0:
-                        for obj in objs:
-                            key = "{}.{}".format(obj.__class__.__name__,
-                                                 obj.id)
-                            db_dict[key] = obj
             return db_dict
 
     def new(self, obj):

@@ -46,7 +46,8 @@ class DBStorage:
             for obj in  self.__session.query(classes[cls]):
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
                 if obj.__class__.__name__ in models.classes:
-                    del obj._sa_instance_state
+                    if obj._sa_instance_state == True:
+                        pass
                 db_dict[key] = obj
             return db_dict
 

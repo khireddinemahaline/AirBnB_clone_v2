@@ -20,7 +20,6 @@ if len(all_places) == 0:
     
 
 places_by_name = {}
-
 for p_id in all_places.keys():
     place = all_places[p_id]
     places_by_name[place.name] = place

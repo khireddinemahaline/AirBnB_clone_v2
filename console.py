@@ -47,7 +47,6 @@ class HBNBCommand(cmd.Cmd):
         if arg in globals():
             model = HBNBCommand.classes[arg](**new_obj)
             model.save()
-            print('i saved thee')
             print(model.id)
         else:
             print("** class doesn't exist **")

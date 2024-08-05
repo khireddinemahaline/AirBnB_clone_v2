@@ -52,7 +52,7 @@ class BaseModel:
         dic_obj["created_at"] = self.created_at.isoformat()
         dic_obj["updated_at"] = self.updated_at.isoformat()
         if "_sa_instance_state" in dic_obj:
-            del dic_obj["_sa_instance_state"]
+            del dic_obj._sa_instance_state
         return dic_obj
     def delete():
         models.storage.delete()

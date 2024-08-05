@@ -15,6 +15,7 @@ from os import getenv
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+import copy
 
 classes = {"Amenity": Amenity, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
@@ -46,9 +47,8 @@ class DBStorage:
             for obj in  self.__session.query(classes[cls]):
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
                 if obj.__class__.__name__ in models.classes:
-                    if obj._sa_instance_state == True:
-                        pass
-                db_dict[key] = obj
+                    del obj._sa_instance_state
+                    db_dict[key] = obj
             return db_dict
 
     def new(self, obj):

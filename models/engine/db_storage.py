@@ -17,9 +17,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 import copy
 
-classes = {"Amenity": Amenity, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
-
 
 class DBStorage:
     """interaacts with the MySQL database"""
@@ -43,8 +40,8 @@ class DBStorage:
 
     def all(self, cls=None):
         db_dict = {}
-        if cls != "":
-            for obj in  self.__session.query(classes[cls]):
+        if cls:
+            for obj in  self.__session.query(eval(cls)).all():
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
                 if obj.__class__.__name__ in models.classes:
                     del obj._sa_instance_state

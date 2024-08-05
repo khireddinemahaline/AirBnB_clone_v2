@@ -15,7 +15,6 @@ from os import getenv
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-import copy
 
 
 class DBStorage:
@@ -41,10 +40,10 @@ class DBStorage:
     def all(self, cls=None):
         db_dict = {}
         if cls:
-            for obj in  self.__session.query(eval(cls)).all():
+            for obj in  self.__session.query(models.classes[cls]).all():
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
                 if obj.__class__.__name__ in models.classes:
-                    del obj._sa_instance_state
+                    #del obj._sa_instance_state
                     db_dict[key] = obj
             return db_dict
 

@@ -8,6 +8,11 @@ from models.review import Review
 from models.state import State
 from models.user import User
 from os import getenv
+classes = {
+                    'User': User, 'Place': Place,
+                    'State': State, 'City': City, 'Amenity': Amenity,
+                    'Review': Review
+                  }
 
 if getenv("HBNB_TYPE_STORAGE") == 'db':
     storage = DBStorage()

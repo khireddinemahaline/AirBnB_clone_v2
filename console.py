@@ -17,38 +17,39 @@ import shlex
 class HBNBCommand(cmd.Cmd):
     """HBNBCommand"""
     prompt = "(hbnb)"
+    classes = {
+                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                    'State': State, 'City': City, 'Amenity': Amenity,
+                    'Review': Review
+                  }
 
-    def do_create(self, arg):
-        """Usage: create <class> <key 1>=<value 2> <key 2>=<value 2> ...
-        Create a new class instance with given keys/values and print its id.
-        """
-        try:
-            if not arg:
-                raise SyntaxError()
-            my_list = arg.split(" ")
+    def do_create(self, args):
+        """command to create a new instance of BaseModel
+        usage: create <class_name>"""
 
-            kwargs = {}
-            for i in range(1, len(my_list)):
-                key, value = tuple(my_list[i].split("="))
-                if value[0] == '"':
-                    value = value.strip('"').replace("_", " ")
-                else:
-                    try:
-                        value = eval(value)
-                    except (SyntaxError, NameError):
-                        continue
-                kwargs[key] = value
-
-            if kwargs == {}:
-                obj = eval(my_list[0])()
-            else:
-                obj = eval(my_list[0])(**kwargs)
-            models.storage.new(obj)
-            print(obj.id)
-            obj.save()
-        except SyntaxError:
+        if not args:
             print("** class name missing **")
-        except NameError:
+            return
+        arg, *params = args.split(' ')
+        new_obj = {}
+        for param in params:
+            try:
+                key, value = param.split('=')
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1].replace('_', ' ')
+                elif '.' in value:
+                    value = float(value)
+                else:
+                    value = int(value)
+                new_obj[key] = value  # Update the new_obj dictionary
+            except Exception:
+                continue
+        if arg in globals():
+            model = HBNBCommand.classes[arg](**new_obj)
+            model.save()
+            print('i saved thee')
+            print(model.id)
+        else:
             print("** class doesn't exist **")
 
     def do_show(self, args):
@@ -98,19 +99,16 @@ class HBNBCommand(cmd.Cmd):
 
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
-            if args not in models.classes:
+            if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage.all(args).items():
-                if k.split('.')[0] == args:
-                    if k != "_sa_instance_state":
-                        print_list.append(str(v))
-
-        else:
-            for k, v in storage.all(args).items():
+            print('i am in the args')
+            for k, v in storage.all(args).items(): 
                 print_list.append(str(v))
-        print('[%s]' % ', '.join(print_list))  # Fixed syntax error
-
+        else:
+            for k, v in storage.all().items(): # i removed the "args" from this line 
+                print_list.append(str(v))
+        print(print_list)
     def do_update(self, args):
         """Updates an instance based on the class name and id """
         arg = shlex.split(args)

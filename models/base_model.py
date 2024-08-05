@@ -27,32 +27,42 @@ class BaseModel:
             arg: wont be used
             kwarg: new arguments for the constructor
         """
-        if kwargs:
-            for key, value in kwargs.items():
-                if key == "created_at" or key == "updated_at":
-                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                else:
-                    setattr(self, key, value)
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
+
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == '__class__':
+                    continue
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                setattr(self, key, value)
+
+
+    ## this __str__ method is where your error did came from and i have modified it.
     def __str__(self):
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
-    def __repr__(self):
-        return ("[{}] ({}) {}".format(self.__class__.__name__,
-                                      self.id, self.__dict__))
+        """Returns a string representation of the instance"""
+        cls = type(self).__name__ # this extracts the name of the instance of the class
+        ## the var <attributes> stores the values of all the attributes in that class instance
+        ## except _sa_instance_state
+        attributes = ', '.join(f"'{key}': {repr(getattr(self, key))}" for key in self.__dict__.keys() if key != '_sa_instance_state')
+        return f"[{cls}] ({self.id}) {{{attributes}}}"
+
     def save(self):
         self.updated_at = datetime.now()
         models.storage.new(self)
         models.storage.save()
         
     def to_dict(self):
-        dic_obj = self.__dict__.copy()
-        dic_obj["__class__"] = self.__class__.__name__
-        dic_obj["created_at"] = self.created_at.isoformat()
-        dic_obj["updated_at"] = self.updated_at.isoformat()
-        #if dic_obj["_sa_instance_state"]  == True:
-        dic_obj.pop("_sa_instance_state")
+        dic_obj = {}
+        dic_obj.update(self.__dict__)
+        if '_sa_instance_state' in dic_obj:
+            del (dic_obj['_sa_instance_state'])
+        dic_obj.update({'__class__':
+                          (str(type(self)).split('.')[-1]).split('\'')[0]})
+        dic_obj['created_at'] = self.created_at.isoformat()
+        dic_obj['updated_at'] = self.updated_at.isoformat()
         return dic_obj
     def delete():
         models.storage.delete()

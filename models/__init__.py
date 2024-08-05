@@ -14,5 +14,3 @@ if getenv("HBNB_TYPE_STORAGE") == 'db':
 else:
     storage = FileStorage()
 storage.reload()
-
-classes = ["BaseModel","State", "User", "City", "Place", "Review", "Amenity"]

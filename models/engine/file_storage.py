@@ -62,9 +62,8 @@ class FileStorage:
             with open(self.__file_path, 'r') as f:
                 jo = json.load(f)
             for key in jo:
-                self.__objects[key] = FileStorage.
-                __all_model[jo[key]["__class__"]](**jo[key])
-        except e:
+                self.__objects[key] = FileStorage.__all_model[jo[key]["__class__"]](**jo[key])
+        except Exception as e:
             pass
 
     def delete(self, obj=None):

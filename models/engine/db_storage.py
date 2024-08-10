@@ -40,10 +40,10 @@ class DBStorage:
     def all(self, cls=None):
         db_dict = {}
         if cls:
-            for obj in  self.__session.query(models.classes[cls]).all():
+            for obj in self.__session.query(models.classes[cls]).all():
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
                 if obj.__class__.__name__ in models.classes:
-                    #del obj._sa_instance_state
+                    # del obj._sa_instance_state
                     db_dict[key] = obj
             return db_dict
 
@@ -65,7 +65,7 @@ class DBStorage:
         Base.metadata.create_all(self.__engine)
         sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(sess_factory)
-        self.__session = Session
+        self.__session = Session()
 
     def close(self):
         """call remove() method on the private session attribute"""

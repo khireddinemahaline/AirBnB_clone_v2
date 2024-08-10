@@ -18,15 +18,14 @@ class FileStorage:
     """
     __file_path = "file.json"
     __objects = {}
-    # i defined a private class to store all the instances of BaseModel so i can
+    # i defined a private class to store all the instances of BaseModel
     # be able to use it to compare in subsequent methods
     __all_model = {"State": State, "Amenity": Amenity, 'Place': Place,
-                   'Review': Review, 'City': City, 'User': User, 'BaseModel': BaseModel}
-    
-    
+                   'Review': Review, 'City': City, 'User': User,
+                   'BaseModel': BaseModel}
+
     def all(self, cls=None):
         """returns the dictionary __objects"""
-        ## i made no changes here. this is allright
         if cls:
             new_dict = {}
             for key, value in self.__objects.items():
@@ -35,20 +34,19 @@ class FileStorage:
             return new_dict
         else:
             return self.__objects
+
     def new(self, obj):
-        """
-        """
+        """craete new instance"""
         if obj:
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
             FileStorage.__objects[key] = obj
-            ## shorter way is this:
-            ## self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
+            # shorter way is this:
 
     def save(self):
         """
         """
-        ## there was actually no issue here but i modified it anyways
-        ## you can revert back to your original algorithm of the method
+        # there was actually no issue here but i modified it anyways
+        # you can revert back to your original algorithm of the method
         with open(FileStorage.__file_path, 'w', encoding="UTF-8") as f:
             my_dict = {}
             my_dict.update(FileStorage.__objects)
@@ -58,14 +56,15 @@ class FileStorage:
 
     def reload(self):
         """deserializes the JSON file to __objects"""
-        ## no error here, just made some slight adjustments
+        # no error here, just made some slight adjustments
 
         try:
             with open(self.__file_path, 'r') as f:
                 jo = json.load(f)
             for key in jo:
-                self.__objects[key] = FileStorage.__all_model[jo[key]["__class__"]](**jo[key])
-        except:
+                self.__objects[key] = FileStorage.
+                __all_model[jo[key]["__class__"]](**jo[key])
+        except e:
             pass
 
     def delete(self, obj=None):
@@ -82,4 +81,3 @@ class FileStorage:
         Deserialize JSON file to objects
         '''
         self.reload()
-    

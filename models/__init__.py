@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+"""models is to store data even in 
+    * file storage
+    * db storage
+"""
 from models.engine.file_storage import FileStorage
 from models.engine.db_storage import DBStorage
 from models.amenity import Amenity

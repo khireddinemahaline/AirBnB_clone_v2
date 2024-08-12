@@ -34,7 +34,10 @@ def handle():
     Returns:
         str: Rendered HTML page displaying a list of states.
     """
+    # Fetch all State objects from the storage and get their values
     states = storage.all(State).values()
+    
+    # Render the '7-states_list.html' template with the list of states
     return render_template('7-states_list.html', states=states)
 
 
@@ -49,8 +52,10 @@ def teardown(exception):
     Args:
         exception (Exception): The exception raised, if any, during the request.
     """
+    # Close the storage engine session to release resources
     storage.close()
 
 
 if __name__ == '__main__':
+    # Run the Flask development server on host 0.0.0.0 and port 5000
     app.run(host="0.0.0.0", port=5000)

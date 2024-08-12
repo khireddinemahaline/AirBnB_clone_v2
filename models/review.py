@@ -5,6 +5,7 @@ from models.base_model import BaseModel, Base
 from os import getenv
 from sqlalchemy import Column, String, ForeignKey
 
+
 class Review(BaseModel, Base):
     """Representation of Review """
     __tablename__ = 'reviews'

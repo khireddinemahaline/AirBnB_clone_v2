@@ -38,6 +38,7 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
+        """show all instance"""
         db_dict = {}
         if cls:
             for obj in self.__session.query(cls).all():

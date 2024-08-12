@@ -7,10 +7,13 @@ from sqlalchemy import Column, String, Float, Integer, ForeignKey, Table
 from sqlalchemy.orm import relationship
 
 place_amenity = Table("place_amenity", Base.metadata,
-        Column('place_id', String(60), ForeignKey('places.id', onupdate='CASCADE',
-                                            ondelete='CASCADE'), primary_key=True),
-        Column('amenity_id', String(60), ForeignKey("amenities.id", onupdate='CASCADE',
-                                            ondelete='CASCADE'), primary_key=True))
+                      Column('place_id', String(60),
+                             ForeignKey('places.id', onupdate='CASCADE',
+                                        ondelete='CASCADE'), primary_key=True),
+                      Column('amenity_id', String(60),
+                             ForeignKey("amenities.id",
+                                        onupdate='CASCADE',
+                                        ondelete='CASCADE'), primary_key=True))
 
 
 class Place(BaseModel, Base):
@@ -28,7 +31,8 @@ class Place(BaseModel, Base):
         latitude = Column(Float)
         longitude = Column(Float)
         reviews = relationship("Review", backref="place")
-        amenities = relationship("Amenity", secondary=place_amenity, viewonly=False,
+        amenities = relationship("Amenity", secondary=place_amenity,
+                                 viewonly=False,
                                  back_populates="place_amenities")
     else:
 
@@ -62,7 +66,7 @@ class Place(BaseModel, Base):
             '''
             from models.amenity import Amenity
             all_amenity = list(models.storage.all(Amenity).values())
-            list_amenities = [a for a in all_amenity if a.place_id ==self.id]
+            list_amenities = [a for a in all_amenity if a.place_id == self.id]
             return alist_amenities
 
         @amenities.setter

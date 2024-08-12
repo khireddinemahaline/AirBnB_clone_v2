@@ -18,11 +18,6 @@ class FileStorage:
     """
     __file_path = "file.json"
     __objects = {}
-    # i defined a private class to store all the instances of BaseModel
-    # be able to use it to compare in subsequent methods
-    __all_model = {"State": State, "Amenity": Amenity, 'Place': Place,
-                   'Review': Review, 'City': City, 'User': User,
-                   'BaseModel': BaseModel}
 
     def all(self, cls=None):
         """returns the dictionary __objects"""
@@ -36,47 +31,38 @@ class FileStorage:
             return self.__objects
 
     def new(self, obj):
-        """craete new instance"""
+        """
+        """
         if obj:
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
-            FileStorage.__objects[key] = obj
-            # shorter way is this:
+            self.__objects[key] = obj
 
     def save(self):
         """
         """
-        # there was actually no issue here but i modified it anyways
-        # you can revert back to your original algorithm of the method
-        with open(FileStorage.__file_path, 'w', encoding="UTF-8") as f:
-            my_dict = {}
-            my_dict.update(FileStorage.__objects)
-            for key, value in my_dict.items():
-                my_dict[key] = value.to_dict()
+        my_dict = {}
+        for key, value in self.__objects.items():
+            my_dict[key] = value.to_dict()
+        with open(self.__file_path, 'w', encoding="UTF-8") as f:
             json.dump(my_dict, f)
 
     def reload(self):
         """deserializes the JSON file to __objects"""
-        # no error here, just made some slight adjustments
-
         try:
-            with open(self.__file_path, 'r') as f:
+            with open(FileStorage.__file_path, 'r') as f:
                 jo = json.load(f)
             for key in jo:
-                self.__objects[key] = FileStorage.__all_model[jo[key]["__class__"]](**jo[key])
-        except Exception as e:
+                self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
+        except KeyError as e:
             pass
 
     def delete(self, obj=None):
-        '''
-        Deletes an obj
-        '''
+        '''Deletes an obj'''
         if obj is not None:
             key = str(obj.__class__.__name__) + "." + str(obj.id)
             FileStorage.__objects.pop(key, None)
             self.save()
 
     def close(self):
-        '''
-        Deserialize JSON file to objects
-        '''
+        '''Deserialize JSON file to objects'''
         self.reload()

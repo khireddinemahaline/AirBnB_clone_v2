@@ -31,6 +31,7 @@ GRANT SELECT
     TO 'hbnb_dev'@'localhost';
 FLUSH PRIVILEGES;
 
+
 USE hbnb_dev_db;
 
 --

@@ -1,23 +1,22 @@
 #!/usr/bin/python3
-"""return hello HBNB using flask"""
+"""Return a list of states using Flask"""
 
 from flask import Flask, render_template
 from models import storage
 from models.state import State
 
-
 app = Flask(__name__)
 
-
-
 @app.route('/states_list', strict_slashes=False)
-def handel():
-    return render_template('7-states_list.html', states=storage.all(State).values())
+def handle():
+    """Handle the /states_list route"""
+    states = storage.all(State).values()
+    return render_template('7-states_list.html', states=states)
 
 @app.teardown_appcontext
-def teardown(exec):
+def teardown(exception):
+    """Close the storage session after each request"""
     storage.close()
 
-
 if __name__ == '__main__':
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0", port=5000)

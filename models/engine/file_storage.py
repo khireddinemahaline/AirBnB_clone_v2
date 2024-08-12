@@ -1,6 +1,11 @@
 #!/usr/bin/python3
-"""storage file
-    usage : storage of objects in a JSON file 
+"""
+FileStorage module
+
+This module defines the `FileStorage` class, which is responsible for
+storing and retrieving objects in a JSON file. It implements methods
+to manage and persist objects to the file system, providing functionality
+to create, read, update, and delete objects
 """
 
 import json

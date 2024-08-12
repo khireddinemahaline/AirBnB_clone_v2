@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-"""storage file"""
-
+"""storage file
+    usage : storage of objects in a JSON file 
+"""
 
 import json
 from models.base_model import BaseModel
@@ -14,13 +15,28 @@ from models.amenity import Amenity
 
 class FileStorage:
     """
-    store data in file storage
+    This class manages storage of objects in a JSON file.
+
+    Attributes:
+        __file_path (str): The file path to the JSON file where objects are stored.
+        __objects (dict): A dictionary of all objects stored in memory.
     """
     __file_path = "file.json"
     __objects = {}
 
     def all(self, cls=None):
-        """returns the dictionary __objects"""
+        """
+        Returns a dictionary of all objects or objects of a specified class.
+
+        If cls is provided, it filters objects by class. If cls is None, returns all objects.
+
+        Args:
+            cls (type or str, optional): The class type or class name to filter objects by.
+
+        Returns:
+            dict: A dictionary where keys are formatted as "<class name>.<object id>" 
+                  and values are the corresponding object instances.
+        """
         if cls:
             new_dict = {}
             for key, value in self.__objects.items():
@@ -31,13 +47,22 @@ class FileStorage:
             return self.__objects
 
     def new(self, obj):
-        """create new obj"""
+        """
+        Adds a new object to the storage.
+
+        Args:
+            obj (BaseModel): The object to be added to storage.
+        """
         if obj:
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
             FileStorage.__objects[key] = obj
 
     def save(self):
-        """ save new object"""
+        """
+        Saves all objects to the JSON file.
+
+        Serializes __objects to JSON format and writes them to the file specified by __file_path.
+        """
         with open(FileStorage.__file_path, 'w', encoding="UTF-8") as f:
             my_dict = {}
             my_dict.update(FileStorage.__objects)
@@ -46,7 +71,11 @@ class FileStorage:
             json.dump(my_dict, f)
 
     def reload(self):
-        """deserializes the JSON file to __objects"""
+        """
+        Loads data from the JSON file and deserializes it into __objects.
+
+        Reads the JSON file and creates objects based on the data in the file.
+        """
         try:
             with open(self.__file_path, 'r') as f:
                 jo = json.load(f)
@@ -57,16 +86,23 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        '''
-        Deletes an obj
-        '''
+        """
+        Deletes an object from storage.
+
+        If obj is not None, the specified object is removed from __objects.
+
+        Args:
+            obj (BaseModel, optional): The object to be deleted from storage.
+        """
         if obj is not None:
             key = str(obj.__class__.__name__) + "." + str(obj.id)
             FileStorage.__objects.pop(key, None)
             self.save()
 
     def close(self):
-        '''
-        Deserialize JSON file to objects
-        '''
+        """
+        Closes the storage by calling reload().
+
+        This method reloads the data, which is equivalent to deserializing the JSON file.
+        """
         self.reload()

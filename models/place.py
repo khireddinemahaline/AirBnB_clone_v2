@@ -1,11 +1,53 @@
 #!/usr/bin/python3
-"""Place Class"""
+"""Place Class
+
+This module defines the `Place` class, which represents a place in the 
+context of a database or file storage system. The `Place` class includes
+attributes related to a place, such as its location, description, and
+amenities. It also defines relationships with other models.
+
+Dependencies:
+- models: For accessing the storage system.
+- sqlalchemy: For SQLAlchemy ORM support.
+- os: For accessing environment variables.
+
+Attributes:
+    __tablename__ (str): The name of the table in the database.
+    city_id (str): Foreign key linking the place to a city. Used only in
+    database storage.
+    user_id (str): Foreign key linking the place to a user. Used only in
+    database storage.
+    name (str): The name of the place. Used only in database storage.
+    description (str): A description of the place. Used only in database
+    storage.
+    number_rooms (int): The number of rooms in the place. Used only in
+    database storage.
+    number_bathrooms (int): The number of bathrooms in the place. Used only
+    in database storage.
+    max_guest (int): The maximum number of guests allowed. Used only in
+    database storage.
+    price_by_night (int): The price per night. Used only in database storage.
+    latitude (float): The latitude of the place. Used only in database
+    storage.
+    longitude (float): The longitude of the place. Used only in database
+    storage.
+    reviews (relationship): SQLAlchemy relationship with `Review` model.
+    amenities (relationship): SQLAlchemy relationship with `Amenity` model
+    if using database storage.
+
+Conditional:
+    - If `HBNB_TYPE_STORAGE` is 'db', use SQLAlchemy columns and relationships.
+    - If `HBNB_TYPE_STORAGE` is not 'db', use plain attributes and define
+    properties for reviews and amenities.
+"""
+
 import models
 from models.base_model import BaseModel, Base
 from os import getenv
 from sqlalchemy import Column, String, Float, Integer, ForeignKey, Table
 from sqlalchemy.orm import relationship
 
+# Many-to-many relationship table between Place and Amenity
 place_amenity = Table("place_amenity", Base.metadata,
                       Column('place_id', String(60),
                              ForeignKey('places.id', onupdate='CASCADE',
@@ -17,9 +59,37 @@ place_amenity = Table("place_amenity", Base.metadata,
 
 
 class Place(BaseModel, Base):
-    """Place Class"""
-    __tablename__ = 'places'
+    """Place Class
+
+    Represents a place that can have various attributes and associations
+    with other models. The class includes SQLAlchemy columns and relationships
+    for database storage and properties for file storage.
+
+    Attributes:
+        __tablename__ (str): The name of the table in the database.
+        city_id (str): Foreign key linking to the city. Used in database storage.
+        user_id (str): Foreign key linking to the user. Used in database storage.
+        name (str): The name of the place. Used in database storage.
+        description (str): Description of the place. Used in database storage.
+        number_rooms (int): Number of rooms in the place. Used in database storage.
+        number_bathrooms (int): Number of bathrooms in the place. Used in database storage.
+        max_guest (int): Maximum number of guests allowed. Used in database storage.
+        price_by_night (int): Price per night. Used in database storage.
+        latitude (float): Latitude of the place. Used in database storage.
+        longitude (float): Longitude of the place. Used in database storage.
+        reviews (relationship): Relationship with `Review` model for database storage.
+        amenities (relationship): Relationship with `Amenity` model for database storage.
+
+    Conditional:
+        - If `HBNB_TYPE_STORAGE` is 'db', use SQLAlchemy columns and relationships.
+        - If `HBNB_TYPE_STORAGE` is not 'db', use plain attributes and define
+          properties for reviews and amenities.
+    """
+    __tablename__ = 'places'  # Table name in the database
+
+    # Define attributes and relationships based on storage type
     if getenv("HBNB_TYPE_STORAGE") == "db":
+        # In database storage, use SQLAlchemy columns and relationships
         city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
         user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
         name = Column(String(128), nullable=False)
@@ -30,27 +100,32 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, default=0, nullable=False)
         latitude = Column(Float)
         longitude = Column(Float)
+        # Relationship with Review model
         reviews = relationship("Review", backref="place")
+        # Relationship with Amenity model
         amenities = relationship("Amenity", secondary=place_amenity,
-                                 viewonly=False,
-                                 back_populates="place_amenities")
+                                 viewonly=False, back_populates="place_amenities")
     else:
-
-        city_id: str = ''
-        user_id: str = ''
-        name: str = ''
-        description: str = ''
-        number_room: int = 0
-        number_bathroom: int = 0
-        max_guest: int = 0
-        price_by_night: int = 0
-        latitude: float = 0.0
-        longitude: float = 0.0
-        amenity_ids: list = {}
+        # In file storage, use plain attributes and define properties
+        city_id: str = ''  # Foreign key to city
+        user_id: str = ''  # Foreign key to user
+        name: str = ''  # Name of the place
+        description: str = ''  # Description of the place
+        number_rooms: int = 0  # Number of rooms
+        number_bathrooms: int = 0  # Number of bathrooms
+        max_guest: int = 0  # Maximum number of guests
+        price_by_night: int = 0  # Price per night
+        latitude: float = 0.0  # Latitude
+        longitude: float = 0.0  # Longitude
+        amenity_ids: list = {}  # List of amenity IDs
 
         @property
-        def reviews():
-            """list reviews"""
+        def reviews(self):
+            """List reviews for the place.
+
+            Returns:
+                list: List of `Review` instances associated with this place.
+            """
             from models.review import Review
             list_reviews = []
             for review in models.storage.all(Review).values():
@@ -60,21 +135,23 @@ class Place(BaseModel, Base):
 
         @property
         def amenities(self):
-            '''
-                Return list: amenity inst's if Amenity.place_id=curr place.id
-                FileStorage many to many relationship between Place and Amenity
-            '''
+            """List amenities for the place.
+
+            Returns:
+                list: List of `Amenity` instances associated with this place.
+            """
             from models.amenity import Amenity
             all_amenity = list(models.storage.all(Amenity).values())
             list_amenities = [a for a in all_amenity if a.place_id == self.id]
-            return alist_amenities
+            return list_amenities
 
         @amenities.setter
         def amenities(self, amenity=None):
-            '''
-                Set list: amenity instances if Amenity.place_id==curr place.id
-                Set by adding instance objs to amenity_ids attribute in Place
-            '''
+            """Set amenities for the place.
+
+            Args:
+                amenity (Amenity): An instance of `Amenity` to add to the list.
+            """
             if amenity:
                 for amenity in models.storage.all(Amenity).values():
                     if amenity.place_id == self.id:

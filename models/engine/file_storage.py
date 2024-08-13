@@ -7,7 +7,7 @@ storing and retrieving objects in a JSON file. It implements methods
 to manage and persist objects to the file system, providing functionality
 to create, read, update, and delete objects
 """
-
+import models
 import json
 from models.base_model import BaseModel
 from models.user import User
@@ -85,8 +85,8 @@ class FileStorage:
             with open(self.__file_path, 'r') as f:
                 jo = json.load(f)
             for key in jo:
-                obj = self.__objects[key]
-                obj = models.classes[jo[key]["__class__"]](**jo[key])
+                #obj = self.__objects[key]
+                self.__objects[key] = models.classes[jo[key]["__class__"]](**jo[key])
         except FileNotFoundError:
             pass
 

@@ -16,8 +16,8 @@ Attributes:
     database storage.
 
 Conditional:
-    - If `HBNB_TYPE_STORAGE` is 'db', SQLAlchemy columns and relationships are used.
-    - If `HBNB_TYPE_STORAGE` is not 'db', properties and manual handling of related
+    - If `HBNB_TYPE_STORAGE` is 'db', SQLAlchemy columns and relationships
+    - If `HBNB_TYPE_STORAGE` is not 'db', properties and manual handling
     objects are used.
 """
 
@@ -51,12 +51,13 @@ class State(BaseModel, Base):
         @property
         def cities(self):
             """
-            Property that returns a list of `City` objects related to this state.
+            Property that returns a list of `City` objects
 
-            In file storage, manually filter and return related city objects.
+            In file storage, manually filter and return rela city objects.
 
             Returns:
-                list: A list of `City` objects where the state_id matches the state's id.
+                list: A list of `City` objects
+                where the state_id matches the state's id.
             """
             from models.city import City
             list_cities = []

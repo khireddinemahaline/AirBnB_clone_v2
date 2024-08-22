@@ -2,11 +2,11 @@
 """
 FileStorage module
 
-This module defines the `FileStorage` class, which is responsible for
-storing and retrieving objects in a JSON file. It implements methods
-to manage and persist objects to the file system, providing functionality
-to create, read, update, and delete objects
+Defines the `FileStorage` class for storing and retrieving objects
+in a JSON file. Provides methods to manage, persist, and handle
+objects in the file system.
 """
+
 import models
 import json
 from models.base_model import BaseModel
@@ -20,11 +20,11 @@ from models.amenity import Amenity
 
 class FileStorage:
     """
-    This class manages storage of objects in a JSON file.
+    Manages object storage in a JSON file.
 
     Attributes:
-        __file_path (str): The file path to the JSON file where objects are stored.
-        __objects (dict): A dictionary of all objects stored in memory.
+        __file_path (str): Path to the JSON file where objects are stored.
+        __objects (dict): Dictionary of all objects stored in memory.
     """
     __file_path = "file.json"
     __objects = {}
@@ -33,14 +33,13 @@ class FileStorage:
         """
         Returns a dictionary of all objects or objects of a specified class.
 
-        If cls is provided, it filters objects by class. If cls is None, returns all objects.
-
         Args:
-            cls (type or str, optional): The class type or class name to filter objects by.
+            cls (type or str, optional):
+                Class type or name to filter objects by.
 
         Returns:
-            dict: A dictionary where keys are formatted as "<class name>.<object id>" 
-                  and values are the corresponding object instances.
+            dict: Dictionary with keys as "<class name>.<object id>"
+                  and values as object instances.
         """
         if cls:
             new_dict = {}
@@ -48,15 +47,14 @@ class FileStorage:
                 if cls == value.__class__ or cls == value.__class__.__name__:
                     new_dict[key] = value
             return new_dict
-        else:
-            return self.__objects
+        return self.__objects
 
     def new(self, obj):
         """
-        Adds a new object to the storage.
+        Adds a new object to storage.
 
         Args:
-            obj (BaseModel): The object to be added to storage.
+            obj (BaseModel): Object to be added.
         """
         if obj:
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
@@ -66,7 +64,7 @@ class FileStorage:
         """
         Saves all objects to the JSON file.
 
-        Serializes __objects to JSON format and writes them to the file specified by __file_path.
+        Serializes __objects to JSON format and writes to __file_path.
         """
         with open(FileStorage.__file_path, 'w', encoding="UTF-8") as f:
             my_dict = {}
@@ -77,16 +75,17 @@ class FileStorage:
 
     def reload(self):
         """
-        Loads data from the JSON file and deserializes it into __objects.
+        Loads data from JSON file and deserializes into __objects.
 
-        Reads the JSON file and creates objects based on the data in the file.
+        Reads JSON file and creates objects based on file data.
         """
         try:
             with open(self.__file_path, 'r') as f:
-                jo = json.load(f)
-            for key in jo:
-                #obj = self.__objects[key]
-                self.__objects[key] = models.classes[jo[key]["__class__"]](**jo[key])
+                FileStorage.__objects = json.load(f)
+            for key, val in FileStorage.__objects.items():
+                class_name = val["__class__"]
+                class_name = models.classes[class_name]
+                FileStorage.__objects[key] = class_name(**val)
         except FileNotFoundError:
             pass
 
@@ -94,10 +93,8 @@ class FileStorage:
         """
         Deletes an object from storage.
 
-        If obj is not None, the specified object is removed from __objects.
-
         Args:
-            obj (BaseModel, optional): The object to be deleted from storage.
+            obj (BaseModel, optional): Object to be deleted.
         """
         if obj is not None:
             key = str(obj.__class__.__name__) + "." + str(obj.id)
@@ -106,8 +103,8 @@ class FileStorage:
 
     def close(self):
         """
-        Closes the storage by calling reload().
+        Closes storage by calling reload().
 
-        This method reloads the data, which is equivalent to deserializing the JSON file.
+        Reloads the data, deserializing the JSON file.
         """
         self.reload()

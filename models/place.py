@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Place Class
 
-This module defines the `Place` class, which represents a place in the 
+This module defines the `Place` class, which represents a place in the
 context of a database or file storage system. The `Place` class includes
 attributes related to a place, such as its location, description, and
 amenities. It also defines relationships with other models.
@@ -36,7 +36,8 @@ Attributes:
     if using database storage.
 
 Conditional:
-    - If `HBNB_TYPE_STORAGE` is 'db', use SQLAlchemy columns and relationships.
+    - If `HBNB_TYPE_STORAGE` is 'db', use SQLAlchemy columns and
+    relationships.
     - If `HBNB_TYPE_STORAGE` is not 'db', use plain attributes and define
     properties for reviews and amenities.
 """
@@ -51,11 +52,13 @@ from sqlalchemy.orm import relationship
 place_amenity = Table("place_amenity", Base.metadata,
                       Column('place_id', String(60),
                              ForeignKey('places.id', onupdate='CASCADE',
-                                        ondelete='CASCADE'), primary_key=True),
+                                        ondelete='CASCADE'),
+                             primary_key=True),
                       Column('amenity_id', String(60),
                              ForeignKey("amenities.id",
                                         onupdate='CASCADE',
-                                        ondelete='CASCADE'), primary_key=True))
+                                        ondelete='CASCADE'),
+                             primary_key=True))
 
 
 class Place(BaseModel, Base):
@@ -67,22 +70,24 @@ class Place(BaseModel, Base):
 
     Attributes:
         __tablename__ (str): The name of the table in the database.
-        city_id (str): Foreign key linking to the city. Used in database storage.
-        user_id (str): Foreign key linking to the user. Used in database storage.
+        city_id (str): Foreign key linking to the city. Used in dbstorage.
+        user_id (str): Foreign key linking to the user. Used in dbstorage.
         name (str): The name of the place. Used in database storage.
         description (str): Description of the place. Used in database storage.
-        number_rooms (int): Number of rooms in the place. Used in database storage.
-        number_bathrooms (int): Number of bathrooms in the place. Used in database storage.
-        max_guest (int): Maximum number of guests allowed. Used in database storage.
+        number_rooms (int): Number of rooms in the place. Used in dbstorage.
+        number_bathrooms (int): Number of bathrooms in the place.
+        max_guest (int): Maximum number of guests allowed. Used in dbstorage.
         price_by_night (int): Price per night. Used in database storage.
         latitude (float): Latitude of the place. Used in database storage.
         longitude (float): Longitude of the place. Used in database storage.
-        reviews (relationship): Relationship with `Review` model for database storage.
-        amenities (relationship): Relationship with `Amenity` model for database storage.
+        reviews (relationship): Relationship with `Review` model for dbstorage.
+        amenities (relationship): Rela with `Amenity` model for dbstorage.
 
     Conditional:
-        - If `HBNB_TYPE_STORAGE` is 'db', use SQLAlchemy columns and relationships.
-        - If `HBNB_TYPE_STORAGE` is not 'db', use plain attributes and define
+        - If `HBNB_TYPE_STORAGE` is 'db', use SQLAlchemy
+        columns and relationships.
+        - If `HBNB_TYPE_STORAGE` is not 'db', use plain attributes
+        and define
           properties for reviews and amenities.
     """
     __tablename__ = 'places'  # Table name in the database
@@ -104,20 +109,21 @@ class Place(BaseModel, Base):
         reviews = relationship("Review", backref="place")
         # Relationship with Amenity model
         amenities = relationship("Amenity", secondary=place_amenity,
-                                 viewonly=False, back_populates="place_amenities")
+                                 viewonly=False,
+                                 back_populates="place_amenities")
     else:
         # In file storage, use plain attributes and define properties
-        city_id: str = ''  # Foreign key to city
-        user_id: str = ''  # Foreign key to user
-        name: str = ''  # Name of the place
-        description: str = ''  # Description of the place
-        number_rooms: int = 0  # Number of rooms
-        number_bathrooms: int = 0  # Number of bathrooms
-        max_guest: int = 0  # Maximum number of guests
-        price_by_night: int = 0  # Price per night
-        latitude: float = 0.0  # Latitude
-        longitude: float = 0.0  # Longitude
-        amenity_ids: list = {}  # List of amenity IDs
+        city_id = ''
+        user_id = ''
+        name = ''
+        description = ''
+        number_rooms = 0
+        number_bathrooms = 0
+        max_guest = 0
+        price_by_night = 0
+        latitude = 0.0
+        longitude = 0.0
+        amenity_ids = {}
 
         @property
         def reviews(self):

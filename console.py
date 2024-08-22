@@ -102,12 +102,14 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
                 return
             print('i am in the args')
-            for k, v in storage.all(args).items(): 
+            for k, v in storage.all(args).items():
                 print_list.append(str(v))
         else:
-            for k, v in storage.all().items(): # i removed the "args" from this line 
+            for k, v in storage.all().items():
+                # i removed the "args" from this line
                 print_list.append(str(v))
         print(print_list)
+
     def do_update(self, args):
         """Updates an instance based on the class name and id """
         arg = shlex.split(args)

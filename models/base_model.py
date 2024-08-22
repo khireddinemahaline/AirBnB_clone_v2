@@ -48,7 +48,8 @@ class BaseModel:
             **kwargs: Keyword arguments for initializing the instance.
 
         The constructor generates a new UUID for `id`, and sets `created_at`
-        and `updated_at` to the current time. If keyword arguments are provided,
+        and `updated_at` to the current time. If keyword arguments are
+        provided,
         they are used to update the instance attributes.
         """
         self.id = str(uuid.uuid4())  # Generate a new UUID
@@ -76,11 +77,11 @@ class BaseModel:
         """
         cls = type(self).__name__  # Extract class name
         attributes = ', '.join(
-            f"'{key}': {repr(getattr(self, key))}" 
-            for key in self.__dict__.keys() 
+            "'{}': {}".format(key, repr(getattr(self, key)))
+            for key in self.__dict__.keys()
             if key != '_sa_instance_state'
         )
-        return f"[{cls}] ({self.id}) {{{attributes}}}"
+        return "[{}] ({}) {{{}}}".format(cls, self.id, attributes)
 
     def save(self):
         """

@@ -50,7 +50,8 @@ class City(BaseModel, Base):
     if getenv("HBNB_TYPE_STORAGE") == "db":
         # In database storage, use SQLAlchemy columns
         name = Column(String(128), nullable=False)  # City name
-        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)  # Foreign key to state
+        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
+        # Foreign key to state
         # Relationship with Place model
         places = relationship("Place", backref="cities",
                               cascade="all, delete, delete-orphan")

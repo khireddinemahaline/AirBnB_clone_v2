@@ -51,8 +51,8 @@ class Review(BaseModel, Base):
     if getenv("HBNB_TYPE_STORAGE") == "db":
         # In database storage, use SQLAlchemy columns
         text = Column(String(1024), nullable=False)  # Review text
-        place_id = Column(String(60), ForeignKey("places.id"), nullable=False)  # Foreign key to Place
-        user_id = Column(String(60), ForeignKey("users.id"), nullable=False)  # Foreign key to User
+        place_id = Column(String(60), ForeignKey("places.id"), nullable=False)
+        user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
     else:
         # In file storage, use plain attributes
         place_id = ""  # Foreign key to Place

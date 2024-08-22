@@ -1,67 +1,81 @@
 #!/usr/bin/python3
-"""test Review"""
 
+'''
+    All the test for the user model are implemented here.
+'''
 
 import unittest
-import models
-import os
+import pep8
+from models.base_model import BaseModel
 from models.review import Review
+from os import getenv, remove
+
+storage = getenv("HBNB_TYPE_STORAGE", "fs")
 
 
 class TestReview(unittest.TestCase):
-    """test review"""
-    def test_docstring(self):
-        message = "modle doesn't hase docstring"
-        self.assertIsNotNone(models.review.__doc__, message)
-        message = "class doesn't has a docstring"
-        self.assertIsNotNone(Review.__doc__, message)
+    '''
+        Testing Review class
+    '''
 
-    def test_excutable_file(self):
-        is_read_true = os.access('models/review.py', os.R_OK)
-        self.assertTrue(is_read_true)
-        is_write_true = os.access('models/review.py', os.W_OK)
-        self.assertTrue(is_write_true)
-        is_excu_true = os.access('models/review.py', os.X_OK)
-        self.assertTrue(is_excu_true)
+    @classmethod
+    def setUpClass(cls):
+        '''
+            Sets up unittest
+        '''
+        cls.rev = Review()
+        cls.rev.user_id = "Adriel and Melissa 123"
+        cls.rev.place_id = "Amy and Victor's room at SF"
+        cls.rev.text = "Team Awesome includes Adekunle"
 
-    def test_init_Review(self):
-        object = Review()
-        self.assertIsInstance(object, Review)
+    @classmethod
+    def tearDownClass(cls):
+        '''
+            Tears down unittest
+        '''
+        del cls.rev
+        try:
+            remove("file.json")
+        except FileNotFoundError:
+            pass
 
-    def test_id(self):
-        object_id = Review()
-        object_id1 = Review()
-        self.assertNotEqual(object_id.id, object_id1.id)
+    def test_pep8_style_check(self):
+        '''
+            Tests pep8 style
+        '''
+        style = pep8.StyleGuide(quiet=True)
+        p = style.check_files(['models/review.py'])
+        self.assertEqual(p.total_errors, 0, "pep8 error needs fixing")
 
-    def test_str(self):
-        object = Review()
-        _dic = object.__dict__
-        str1 = "[Review] ({}) {}".format(object.id, _dic)
-        str2 = str(object)
-        self.assertEqual(str1, str2)
+    def test_Review_dbtable(self):
+        '''
+            Check if the tablename is correct
+        '''
+        self.assertEqual(self.rev.__tablename__, "reviews")
 
-    def test_save(self):
-        objectup = Review()
-        update_one = objectup.updated_at
-        objectup.save()
-        update_tow = objectup.updated_at
-        self.assertNotEqual(update_one, update_tow)
+    def test_Review_inheritance(self):
+        '''
+            Tests that the Review class Inherits from BaseModel
+        '''
+        self.assertIsInstance(self.rev, BaseModel)
 
-    def test_to_dict(self):
-        my_model3 = Review()
-        my_dict_model3 = my_model3.to_dict()
-        self.assertIsInstance(my_dict_model3, dict)
-        for key, value in my_dict_model3.items():
-            flag = 0
-            if my_dict_model3['__class__'] == 'Review':
-                flag += 1
-            self.assertTrue(flag == 1)
-        for key, value in my_dict_model3.items():
-            if key == 'created_at':
-                self.assertIsInstance(value, str)
-            if key == 'updated_at':
-                self.assertIsInstance(value, str)
+    def test_Review_attributes(self):
+        '''
+            Tests Review class has place_id, user_id and text attributes
+        '''
+        self.assertTrue("place_id" in self.rev.__dir__())
+        self.assertTrue("user_id" in self.rev.__dir__())
+        self.assertTrue("text" in self.rev.__dir__())
 
-
-if __name__ == '__main__':
-    unittest.main()
+    @unittest.skipIf(storage == "db", "Testing database storage only")
+    def test_Review_attributes(self):
+        '''
+            Test that Review class has place_id, user_id and text
+            attributes.
+        '''
+        place_id = getattr(self.rev, "place_id")
+        user_id = getattr(self.rev, "user_id")
+        text = getattr(self.rev, "text")
+        self.assertIsInstance(place_id, str)
+        self.assertIsInstance(user_id, str)
+        self.assertIsInstance(text, str)

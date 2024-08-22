@@ -2,7 +2,7 @@
 """Initializes the storage system for the application.
 
 This module sets up the storage system, which can either be a file-based
-storage or a database-based storage, depending on the environment configuration.
+storage or a database-based storage, depending on the environment conf.
 It also imports the necessary model classes and prepares the storage system
 for use.
 
@@ -16,14 +16,18 @@ Storage options:
 Imports:
     - `FileStorage`: Class for file-based storage.
     - `DBStorage`: Class for database-based storage.
-    - `Amenity`, `City`, `Place`, `Review`, `State`, `User`: Model classes used in the application.
+    - `Amenity`, `City`, `Place`, `Review`, `State`, `User`:
+    Model classes used in the application.
     - `getenv`: Function to get environment variables.
 
 Setup:
-    - `classes` dictionary maps string names of models to their respective classes.
-    - Initializes `storage` as an instance of `DBStorage` if `HBNB_TYPE_STORAGE` is 'db',
+    - `classes` dictionary maps string names of models to their respective
+    classes.
+    - Initializes `storage` as an instance of `DBStorage`
+    if `HBNB_TYPE_STORAGE` is 'db',
       otherwise initializes `storage` as an instance of `FileStorage`.
-    - Calls `storage.reload()` to load the data from the storage system into memory.
+    - Calls `storage.reload()` to load the data from the storage system
+    into memory.
 """
 
 
@@ -36,11 +40,9 @@ from models.review import Review
 from models.state import State
 from models.user import User
 from os import getenv
-classes = {
-                    'User': User, 'Place': Place,
-                    'State': State, 'City': City, 'Amenity': Amenity,
-                    'Review': Review
-                  }
+
+classes = {"Amenity": Amenity, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
 
 if getenv("HBNB_TYPE_STORAGE") == 'db':
     storage = DBStorage()
